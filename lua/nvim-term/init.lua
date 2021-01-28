@@ -81,19 +81,11 @@ function Term:get_term_buf_windows()
 	return term_buf_windows
 end
 
--- Opens buffer in given window
-function Term:open_buf_in_win(winnr, bufnr)
-	local focus_win_cmd = 'windo %d'
-	local open_buf_cmd = 'buffer %d'
-
-	vim.cmd(focus_win_cmd:format(winnr))
-	vim.cmd(open_buf_cmd:format(bufnr))
-end
-
 -- Opens new window bottom of tab
 -- @return { number } window number
 function Term:create_window(bufnr)
-	local open_buf_in_split_cmd = 'sp +buffer\\ %d'
+	local open_buf_in_split_cmd = 'botright sp +buffer\\ %d'
+	print(open_buf_in_split_cmd:format(bufnr))
 	vim.cmd(open_buf_in_split_cmd:format(bufnr))
 	return vim.fn.winnr()
 end
@@ -123,8 +115,6 @@ function Term:open_term()
 	if(table.getn(term_buf_windows) == 0) then
 		local bufnr = term_buffers[1].bufnr
 		Term:create_window(bufnr)
-
-		--Term:open_buf_in_win(winnr, bufnr)
 	end
 end
 
