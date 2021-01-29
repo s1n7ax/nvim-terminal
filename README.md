@@ -14,16 +14,14 @@ Plug 's1n7ax/nvim-terminal'
 
 ```lua
 vim.api.nvim_set_keymap('n', '<space>t', '<cmd>lua require("nvim-terminal"):toggle_open_term()<cr>', {})
-
-```lua
-#### OR
-
 ```
 
+#### OR
+
+```lua
 local Terminal = require('nvim-terminal')
 
 term = Terminal
-
 vim.api.nvim_set_keymap('n', '<space>t', '<cmd>lua term:toggle_open_term()<cr>', {})
 ```
 
