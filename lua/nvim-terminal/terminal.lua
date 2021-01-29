@@ -1,7 +1,6 @@
 local v = vim.api
 
 local Terminal = {
-	width = nil,
 	height = nil,
 	winid = nil,
 	is_winopened = false,
@@ -9,8 +8,7 @@ local Terminal = {
 }
 
 -- Init Terminal object
-function Terminal:init(width, height)
-	self.width = width
+function Terminal:init(height)
 	self.height = height
 end
 
