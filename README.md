@@ -1,6 +1,6 @@
 # nvim-terminal
 
-Terminal plugin to open/toggle the terminal in Neovim
+Terminal plugin to toggle a terminal in Neovim
 
 ## How to use
 
