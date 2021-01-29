@@ -1,8 +1,11 @@
+local v = vim.api
+
 local Terminal = {
 	width = nil,
 	height = nil,
 	winid = nil,
-	is_winopened = false
+	is_winopened = false,
+	last_winid = nil
 }
 
 -- Init Terminal object
@@ -117,8 +120,8 @@ function Terminal:create_term_window()
 end
 
 function Terminal:close_window(winid)
-	if(vim.api.nvim_win_is_valid(winid)) then
-		vim.api.nvim_win_close(winid, false)
+	if(v.nvim_win_is_valid(winid)) then
+		v.nvim_win_close(winid, false)
 	end
 
 end
@@ -141,11 +144,14 @@ function Terminal:set_win_height(winnr)
 	local height = self:get_height()
 
 	if(height ~= nil) then
-		vim.api.nvim_win_set_height(winnr, height)
+		v.nvim_win_set_height(winnr, height)
 	end
 end
 
 function Terminal:open_term()
+	-- Store current window set the focus back when closing
+	self.last_winid = v.nvim_get_current_win()
+
 	local term_buf_windows = self:get_term_buf_windows()
 	local term_buffers = self:get_term_buffers()
 
@@ -171,6 +177,9 @@ function Terminal:close_term()
 	if(self.is_winopened) then
 		self:close_window(self.winid)
 		self.is_winopened = false
+
+		-- Set the focus back to last used window
+		v.nvim_set_current_win(self.last_winid)
 	end
 end
 

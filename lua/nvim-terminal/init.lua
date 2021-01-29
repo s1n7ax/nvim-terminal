@@ -1,4 +1,4 @@
 -- use when developing
--- package.loaded['nvim-term'] = nil
+-- package.loaded['nvim-terminal'] = nil
 
 return require('nvim-terminal.terminal')
