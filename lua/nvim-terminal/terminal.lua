@@ -175,11 +175,20 @@ end
 
 function Terminal:close_term()
 	if(self.is_winopened) then
+		local change_focus = true
+		-- IF user has changed the current window while the terminal was opened,
+		-- focus shouldn't be changed to the last recorded window
+		if(self.winid ~= v.nvim_get_current_win()) then
+			change_focus = false
+		end
+
 		self:close_window(self.winid)
 		self.is_winopened = false
 
 		-- Set the focus back to last used window
-		v.nvim_set_current_win(self.last_winid)
+		if(change_focus) then
+			v.nvim_set_current_win(self.last_winid)
+		end
 	end
 end
 
