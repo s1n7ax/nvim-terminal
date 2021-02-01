@@ -2,6 +2,8 @@
 
 Terminal plugin to open/toggle the terminals in Neovim
 
+![nvim-terminal demo](https://raw.githubusercontent.com/s1n7ax/nvim-terminal/main/resources/gif/nvim-terminal.gif)
+
 ## Features
 
 * Toggle terminal window
@@ -65,7 +67,3 @@ local silent = { silent = true }
 vim.api.nvim_set_keymap('n', '<leader>+', ':lua window:change_height(3)<cr>', silent)
 vim.api.nvim_set_keymap('n', '<leader>-', ':lua window:change_height(-3)<cr>', silent)
 ```
-
-## Demo
-
-![nvim-terminal demo](https://raw.githubusercontent.com/s1n7ax/nvim-terminal/main/resources/gif/nvim-terminal.gif)
