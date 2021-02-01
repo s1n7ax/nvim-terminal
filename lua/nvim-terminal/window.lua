@@ -69,7 +69,7 @@ function Window:is_valid()
 end
 
 function Window:set_buf(bufno)
-	return v.nvim_win_set_buf(bufno)
+	return v.nvim_win_set_buf(self.winid, bufno)
 end
 
 function Window:focus()
