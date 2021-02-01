@@ -1,201 +1,63 @@
+
 local v = vim.api
 
 local Terminal = {
-	height = nil,
-	winid = nil,
-	is_winopened = false,
-	last_winid = nil
+	bufs = {},
+	last_winid = nil,
+	last_term = nil,
 }
 
--- Init Terminal object
-function Terminal:init(height)
-	self.height = height
+function Terminal:new(window, opt)
+	self.window = window and window or Window:new()
+	return self
 end
 
--- Returns buffer information
-function Terminal:get_buffers()
-	return vim.fn.getbufinfo()
+function Terminal:init()
+	error("There are some breaking changes!")
+	error("Please check new configuration in https://github.com/s1n7ax/nvim-terminal")
 end
 
--- Returns true if the passed buffer is a terminal buffer
-function Terminal:term_buf_matcher(buf_info)
-	if(buf_info.name:find('term://')) then
-		return true
-	end
+function Terminal:open(term_number)
+	local create_win = not self.window:is_valid()
+	local create_buf = self.bufs[term_number] == nil
 
-	return false
-end
+	self.last_term = term_number
 
--- Returns table of buffer details of terminal buffers
-function Terminal:get_term_buffers()
-	local buffers = self:get_buffers()
-	local term_buffers = {}
 
-	for _, buf_info in ipairs(buffers) do
-		local buf_name = buf_info.name
-
-		if(self:term_buf_matcher(buf_info)) then
-			table.insert(term_buffers, buf_info)
-		end
-	end
-
-	return term_buffers
-end
-
--- Returns true if the passed buffer is hidden terminal buffer
-function Terminal:term_hidden_buf_matcher(buf_info)
-	if(buf_info.hidden == 1) then
-		return true
-	end
-
-	return false
-end
-
--- Returns table of buffer details of hidden terminal buffers
-function Terminal:get_hidden_term_buffers()
-	local term_buffers = self:get_term_buffers()
-	local term_hidden_buffers = {}
-
-	for _, buf_info in ipairs(term_buffers) do
-		if(self:term_hidden_buf_matcher(buf_info)) then
-			table.insert(term_hidden_buffers, buf_info)
-		end
-	end
-
-	return term_hidden_buffers
-end
-
--- Returns window informations
-function Terminal:get_windows ()
-	return vim.fn.getwininfo()
-end
-
--- Returns true if the window contains a terminal buffer
-function Terminal:win_term_buf_matcher(win_info)
-	if(win_info.terminal == 1) then
-		return true
-	end
-
-	return false
-end
-
--- Returns window information that has terminal buffers
-function Terminal:get_term_buf_windows()
-	local windows = self:get_windows()
-	local term_buf_windows = {}
-
-	for _, win_info in ipairs(windows) do
-		if(self:win_term_buf_matcher(win_info)) then
-			table.insert(term_buf_windows, win_info)
-		end
-	end
-
-	return term_buf_windows
-end
-
--- Opens new window bottom of tab
--- @return { number } window number
-function Terminal:create_window(bufnr)
-	local open_buf_in_split_cmd = 'botright sp +buffer\\ %d'
-
-	vim.cmd(open_buf_in_split_cmd:format(bufnr))
-
-	local winid = vim.fn.win_getid()
-	self:set_win_height(winid)
-
-	return winid
-end
-
--- Opens new terminal window bottom of tab
--- @return { number } window number
-function Terminal:create_term_window()
-	vim.cmd('botright new +term')
-
-	local winid = vim.fn.win_getid()
-	self:set_win_height(winid)
-
-	return winid
-end
-
-function Terminal:close_window(winid)
-	if(v.nvim_win_is_valid(winid)) then
-		v.nvim_win_close(winid, false)
-	end
-
-end
-
-function Terminal:is_win_opened(winid)
-end
-
-function Terminal:get_height()
-	if(vim.g.term_height ~= nil) then
-		return vim.g.term_height
-	end
-
-	if(self.height ~= nil) then
-		return self.height
-	end
-end
-
--- Set window height
-function Terminal:set_win_height(winnr)
-	local height = self:get_height()
-
-	if(height ~= nil) then
-		v.nvim_win_set_height(winnr, height)
-	end
-end
-
-function Terminal:open_term()
-	-- Store current window set the focus back when closing
-	self.last_winid = v.nvim_get_current_win()
-
-	local term_buf_windows = self:get_term_buf_windows()
-	local term_buffers = self:get_term_buffers()
-
-	-- IF there are no terminal windows or terminal buffers
-	-- THEN creat new terminal buffer
-	if(table.getn(term_buf_windows) == 0 and table.getn(term_buffers) == 0) then
-		self.winid = self:create_term_window()
-		self.is_winopened = true
+	if create_win and create_buf then
+		self.window:create_term()
+		table.insert(self.bufs, self.window:get_bufno())
 		return
 	end
 
-	-- IF there are no windows to show existing terminal buffers
-	-- THEN create new window and open existing buffer
-	if(table.getn(term_buf_windows) == 0) then
-		local bufnr = term_buffers[1].bufnr
-		self.winid = self:create_window(bufnr)
-		self.is_winopened = true
+	if create_win then
+		self.window:create(self.bufs[term_number])
+		return
 	end
 
-end
-
-function Terminal:close_term()
-	if(self.is_winopened) then
-		local change_focus = true
-		-- IF user has changed the current window while the terminal was opened,
-		-- focus shouldn't be changed to the last recorded window
-		if(self.winid ~= v.nvim_get_current_win()) then
-			change_focus = false
-		end
-
-		self:close_window(self.winid)
-		self.is_winopened = false
-
-		-- Set the focus back to last used window
-		if(change_focus) then
-			v.nvim_set_current_win(self.last_winid)
-		end
+	if create_buf then
+		self.window:focus()
+		vim.cmd(':terminal')
+		return
 	end
 end
 
-function Terminal:toggle_open_term()
-	if(self.is_winopened) then
-		self:close_term()
+function Terminal:close()
+	if self.window:is_valid() then
+		self.window:close()
+	end
+end
+
+function Terminal:toggle()
+	self.last_term = self.last_term and self.last_term or 1
+	local opened = self.window:is_valid()
+
+	if opened then
+		self:close()
 	else
-		self:open_term()
+		self:open(self.last_term)
 	end
+
 end
 
 return Terminal
