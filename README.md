@@ -1,44 +1,69 @@
 # nvim-terminal
 
-Terminal plugin to open/toggle the terminal in Neovim
+Terminal plugin to open/toggle the terminals in Neovim
 
-## How to use
+## Features
 
-### Add the plugin using *vim-plug*
+* Toggle terminal window
+* Quick switching between multiple terminal buffers
 
-```lua
+## Install the plugin
+
+### vim-plug
+
+```vim
 Plug 's1n7ax/nvim-terminal'
 ```
 
-### Add keymap
+## Add keymap
 
 ```lua
-vim.api.nvim_set_keymap('n', '<space>t', '<cmd>lua require("nvim-terminal"):toggle_open_term()<cr>', {})
+DefaultTerminal = require('nvim-terminal').DefaultTerminal;
+
+terminal = DefaultTerminal
+local silent = { silent = true }
+
+vim.api.nvim_set_keymap('n', '<leader>t', ':lua terminal:toggle()<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>1', ':lua terminal:open(1)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>2', ':lua terminal:open(2)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>3', ':lua terminal:open(3)<cr>', silent)
 ```
 
-#### OR
+### Configuring the window
 
 ```lua
-local Terminal = require('nvim-terminal')
+local Terminal = require('nvim-terminal').Terminal
+local Window = require('nvim-terminal').Window
 
-term = Terminal
-vim.api.nvim_set_keymap('n', '<space>t', '<cmd>lua term:toggle_open_term()<cr>', {})
+local window = Window:new({
+	pos = 'botright',
+	split = 'sp',
+	width = 50,
+	height = 15
+})
+
+terminal = Terminal:new(window)
 ```
 
-### Set window height
+## Change size on the fly
 
 ```lua
-vim.g.term_height = 15
-```
-#### OR
+local Terminal = require('nvim-terminal').Terminal
+local Window = require('nvim-terminal').Window
 
-```lua
+window = Window:new()
+terminal = Terminal:new(window)
 
-local Terminal = require('nvim-terminal')
+function window:change_height(by)
+	local width, height = window:get_size()
+	window.height = height + by
+	window:update_size()
+end
 
-term = Terminal
-term:init(15)
+vim.api.nvim_set_keymap('n', '<leader>+', ':lua window:change_height(+1)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>-', ':lua window:change_height(-1)<cr>', silent)
 ```
 
 ## Demo
+
 ![nvim-terminal demo](https://raw.githubusercontent.com/s1n7ax/nvim-terminal/main/resources/gif/nvim-terminal.gif)

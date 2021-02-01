@@ -50,6 +50,12 @@ function Window:update_size()
 	end
 end
 
+function Window:get_size()
+	local width = v.nvim_win_get_width(self.winid)
+	local height = v.nvim_win_get_height(self.winid)
+
+	return width, height
+end
 
 -- close the window
 function Window:close(winid)

@@ -1,5 +1,6 @@
 --use when developing
---[[ 
+
+--[[
 package.loaded['nvim-terminal.terminal'] = nil
 package.loaded['nvim-terminal.window'] = nil
 package.loaded['nvim-terminal'] = nil
@@ -24,4 +25,5 @@ term = Terminal:new(window)
 return {
 	Terminal = require('nvim-terminal.terminal'),
 	Window = require('nvim-terminal.window'),
+	DefaultTerminal = Terminal:new(Window:new())
 }
