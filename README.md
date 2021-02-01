@@ -47,6 +47,13 @@ local window = Window:new({
 terminal = Terminal:new(window)
 ```
 
+**pos** - Do `:h :leftabove` for more information
+**split** - Do `:h split` for more information
+**width** - Width of the terminal
+**height** - Height of the terminal
+
+NOTE: width or height may not be applied in some "pos"
+
 ## Change size on the fly
 
 ```lua
