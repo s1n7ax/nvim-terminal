@@ -22,8 +22,12 @@ local window = Window:new()
 term = Terminal:new(window)
 ]]
 
+local Terminal = require('nvim-terminal.terminal')
+local Window = require('nvim-terminal.window')
+local DefaultTerminal = Terminal:new(Window:new())
+
 return {
-	Terminal = require('nvim-terminal.terminal'),
-	Window = require('nvim-terminal.window'),
-	DefaultTerminal = Terminal:new(Window:new())
+	Terminal = Terminal,
+	Window = Window,
+	DefaultTerminal = DefaultTerminal
 }

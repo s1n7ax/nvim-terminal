@@ -9,7 +9,7 @@ Terminal plugin to open/toggle the terminals in Neovim
 
 ## Install the plugin
 
-### vim-plug
+**vim-plug**
 
 ```vim
 Plug 's1n7ax/nvim-terminal'
@@ -60,8 +60,10 @@ function window:change_height(by)
 	window:update_size()
 end
 
-vim.api.nvim_set_keymap('n', '<leader>+', ':lua window:change_height(+1)<cr>', silent)
-vim.api.nvim_set_keymap('n', '<leader>-', ':lua window:change_height(-1)<cr>', silent)
+local silent = { silent = true }
+
+vim.api.nvim_set_keymap('n', '<leader>+', ':lua window:change_height(3)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>-', ':lua window:change_height(-3)<cr>', silent)
 ```
 
 ## Demo
