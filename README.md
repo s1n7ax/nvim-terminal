@@ -15,7 +15,7 @@ Terminal plugin to open/toggle the terminals in Neovim
 Plug 's1n7ax/nvim-terminal'
 ```
 
-## Add keymap
+## Add keymaps
 
 ```lua
 DefaultTerminal = require('nvim-terminal').DefaultTerminal;
@@ -29,7 +29,7 @@ vim.api.nvim_set_keymap('n', '<leader>2', ':lua terminal:open(2)<cr>', silent)
 vim.api.nvim_set_keymap('n', '<leader>3', ':lua terminal:open(3)<cr>', silent)
 ```
 
-### Configuring the window
+## Configuring the terminal window
 
 ```lua
 local Terminal = require('nvim-terminal').Terminal
