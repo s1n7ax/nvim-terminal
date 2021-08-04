@@ -1,4 +1,6 @@
 local v = vim.api
+local cmd = vim.cmd
+local fn = vim.fn
 
 local Window = {}
 
@@ -16,10 +18,10 @@ end
 -- Opens new window bottom of tab
 -- @return { number } window id
 function Window:create(bufnr)
-    local cmd = '%s %s +buffer\\ %d'
-    vim.cmd(cmd:format(self.pos, self.split, bufnr))
+    local cmd_format = '%s %s +buffer\\ %d'
+    cmd(cmd_format:format(self.pos, self.split, bufnr))
 
-    self.winid = vim.fn.win_getid()
+    self.winid = fn.win_getid()
 
     self:update_size()
 
@@ -29,10 +31,10 @@ end
 -- Opens new terminal window bottom of tab
 -- @return { number } window number
 function Window:create_term()
-    local cmd = '%s new +term'
-    vim.cmd(cmd:format(self.pos))
+    local cmd_format = '%s new +term'
+    cmd(cmd_format:format(self.pos))
 
-    self.winid = vim.fn.win_getid()
+    self.winid = fn.win_getid()
 
     self:update_size()
 

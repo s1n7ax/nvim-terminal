@@ -19,7 +19,7 @@ end
 
 -- executes the run method in the package
 local run_action = function()
-    Terminal:open(1)
+    Terminal:toggle()
 end
 
 -- unload and run the function from the package
