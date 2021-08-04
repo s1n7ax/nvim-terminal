@@ -20,14 +20,14 @@ Plug 's1n7ax/nvim-terminal'
 ## Add keymaps
 
 ```lua
-terminal = require('nvim-terminal').DefaultTerminal;
-
-local silent = { silent = true }
-
 -- following option will hide the buffer when it is closed instead deleting
 -- the buffer. This is important to reuse the last terminal buffer
 -- IF the option is not set, plugin will open a new terminal every single time
 vim.o.hidden = true
+
+terminal = require('nvim-terminal').DefaultTerminal;
+
+local silent = { silent = true }
 
 vim.api.nvim_set_keymap('n', '<leader>t', ':lua terminal:toggle()<cr>', silent)
 vim.api.nvim_set_keymap('n', '<leader>1', ':lua terminal:open(1)<cr>', silent)
