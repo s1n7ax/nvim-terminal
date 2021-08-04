@@ -18,7 +18,9 @@ end
 
 function Terminal:open(term_number)
 	local create_win = not self.window:is_valid()
-	local create_buf = self.bufs[term_number] == nil
+    -- create buffer if it does not exist by the given term_number or the stored
+    -- buffer number is no longer valid
+	local create_buf = self.bufs[term_number] == nil or not v.nvim_buf_is_valid(self.bufs[term_number])
 
 
 	-- window or buffer does not exist
