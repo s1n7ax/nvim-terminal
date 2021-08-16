@@ -40,6 +40,10 @@ use {
 
 <kbd>leader</kbd> + <kbd>-</kbd> - **Decrease window height**
 
+<kbd>leader</kbd> + <kbd>leader</kbd> + <kbd>+</kbd> - **Increase window width**
+
+<kbd>leader</kbd> + <kbd>leader</kbd> + <kbd>-</kbd> - **Decrease window width**
+
 ## Configuration
 
 Simply pass the custom configuration in to `setup` method
