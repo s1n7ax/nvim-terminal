@@ -7,10 +7,10 @@ local Window = {}
 function Window:new(opt)
     opt = opt and opt or {}
 
-    self.pos = opt.pos and opt.pos or 'botright'
-    self.split = opt.split and opt.split or 'sp'
-    self.width = opt.width and opt.width or nil
-    self.height = opt.height and opt.height or nil
+    self.pos = opt.pos or opt.position or 'botright'
+    self.split = opt.split or 'sp'
+    self.width = opt.width or nil
+    self.height = opt.height or nil
 
     return self
 end
@@ -76,6 +76,20 @@ function Window:focus() v.nvim_set_current_win(self.winid) end
 -- @return { number } buffer number
 function Window:get_bufno()
     if self:is_valid() then return v.nvim_win_get_buf(self.winid) end
+end
+
+-- Increase window height
+function Window:change_height(by)
+    local _, height = self:get_size()
+	self.height = height + by
+	self:update_size()
+end
+
+-- Increase window height
+function Window:change_width(by)
+    local width, _ = self:get_size()
+	self.width = width + by
+	self:update_size()
 end
 
 return Window

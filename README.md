@@ -11,13 +11,42 @@ Terminal plugin to open/toggle the terminals in Neovim
 
 ## Install the plugin
 
-**vim-plug**
-
-```vim
-Plug 's1n7ax/nvim-terminal'
+**packer**
+```lua
+use {
+    's1n7ax/nvim-terminal',
+    config = function()
+        vim.o.hidden = true
+        require('nvim-terminal').setup()
+    end,
+}
 ```
 
-## Add keymaps
+## Default Keymaps
+
+<kbd>leader</kbd> + <kbd>;</kbd> - **Toggle open/close terminal**
+
+<kbd>leader</kbd> + <kbd>1</kbd> - **Open terminal 1**
+
+<kbd>leader</kbd> + <kbd>2</kbd> - **Open terminal 2**
+
+<kbd>leader</kbd> + <kbd>3</kbd> - **Open terminal 3**
+
+<kbd>leader</kbd> + <kbd>4</kbd> - **Open terminal 4**
+
+<kbd>leader</kbd> + <kbd>5</kbd> - **Open terminal 5**
+
+<kbd>leader</kbd> + <kbd>+</kbd> - **Increase window height**
+
+<kbd>leader</kbd> + <kbd>-</kbd> - **Decrease window height**
+
+<kbd>leader</kbd> + <kbd>leader</kbd> + <kbd>+</kbd> - **Increase window width**
+
+<kbd>leader</kbd> + <kbd>leader</kbd> + <kbd>-</kbd> - **Decrease window width**
+
+## Configuration
+
+Simply pass the custom configuration in to `setup` method
 
 ```lua
 -- following option will hide the buffer when it is closed instead deleting
@@ -25,6 +54,75 @@ Plug 's1n7ax/nvim-terminal'
 -- IF the option is not set, plugin will open a new terminal every single time
 vim.o.hidden = true
 
+require('nvim-terminal').setup({
+    window = {
+        -- Do `:h :botright` for more information
+        NOTE: width or height may not be applied in some "pos"
+        position = 'botright',
+
+        -- Do `:h split` for more information
+        split = 'sp',
+
+        -- Width of the terminal
+        width = 50,
+
+        -- Height of the terminal
+        height = 15,
+    },
+
+    -- keymap to disablesb all the default keymaps
+    disable_default_keymaps = false,
+
+    -- keymap to toggle open and close terminal window
+    toggle_keymap = '<leader>;',
+
+    -- increase the window width by when you hit the keymap
+    window_height_change_amount = 2,
+
+    -- increase the window height by when you hit the keymap
+    window_width_change_amount = 2,
+
+    -- keymap to increase the window width
+    increase_width_keymap = '<leader><leader>+',
+
+    -- keymap to decrease the window width
+    decrease_width_keymap = '<leader><leader>-',
+
+    -- keymap to increase the window height
+    increase_height_keymap = '<leader>+',
+
+    -- keymap to decrease the window height
+    decrease_height_keymap = '<leader>-',
+
+    terminals = {
+        -- keymaps to open nth terminal
+        {keymap = '<leader>1'},
+        {keymap = '<leader>2'},
+        {keymap = '<leader>3'},
+        {keymap = '<leader>4'},
+        {keymap = '<leader>5'},
+    },
+})
+```
+
+## Add Keymaps Manually
+
+`nvim-terminal` adds a globle variable called `NTGlobal`. When you call
+`require('nvim-terminal').setup()` it adds `terminal` and `window` properties to
+`NTGlobal`
+
+```lua
+vim.api.nvim_set_keymap('n', '<leader>t', ':lua NTGlobal["terminal"]:toggle()<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>1', ':lua NTGlobal["terminal"]:open(1)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>+', ':lua NTGlobal["window"]:change_height(2)<cr>', silent)
+vim.api.nvim_set_keymap('n', '<leader>-', ':lua NTGlobal["window"]:change_height(-2)<cr>', silent)
+```
+
+## PRO MODE
+
+### Default Terminal
+
+```lua
 terminal = require('nvim-terminal').DefaultTerminal;
 
 local silent = { silent = true }
@@ -35,46 +133,18 @@ vim.api.nvim_set_keymap('n', '<leader>2', ':lua terminal:open(2)<cr>', silent)
 vim.api.nvim_set_keymap('n', '<leader>3', ':lua terminal:open(3)<cr>', silent)
 ```
 
-## Configuring the terminal window
+### Customized Window
 
 ```lua
-local Terminal = require('nvim-terminal').Terminal
-local Window = require('nvim-terminal').Window
+local Terminal = require('nvim-terminal.terminal')
+local Window = require('nvim-terminal.window')
 
 local window = Window:new({
-	pos = 'botright',
+	position = 'botright',
 	split = 'sp',
 	width = 50,
 	height = 15
 })
 
 terminal = Terminal:new(window)
-```
-
-**pos** - Do `:h :leftabove` for more information
-**split** - Do `:h split` for more information
-**width** - Width of the terminal
-**height** - Height of the terminal
-
-NOTE: width or height may not be applied in some "pos"
-
-## Change size on the fly
-
-```lua
-local Terminal = require('nvim-terminal').Terminal
-local Window = require('nvim-terminal').Window
-
-window = Window:new()
-terminal = Terminal:new(window)
-
-function window:change_height(by)
-	local width, height = window:get_size()
-	window.height = height + by
-	window:update_size()
-end
-
-local silent = { silent = true }
-
-vim.api.nvim_set_keymap('n', '<leader>+', ':lua window:change_height(3)<cr>', silent)
-vim.api.nvim_set_keymap('n', '<leader>-', ':lua window:change_height(-3)<cr>', silent)
 ```

@@ -1,33 +1,65 @@
---use when developing
-
---[[
-package.loaded['nvim-terminal.terminal'] = nil
-package.loaded['nvim-terminal.window'] = nil
-package.loaded['nvim-terminal'] = nil
-
-vim.api.nvim_set_keymap('n', '<leader>t', '<cmd>lua term:toggle()<cr>', {})
-vim.api.nvim_set_keymap('n', '<leader>1', '<cmd>lua term:open(1)<cr>', {})
-vim.api.nvim_set_keymap('n', '<leader>2', '<cmd>lua term:open(2)<cr>', {})
-vim.api.nvim_set_keymap('n', '<leader>3', '<cmd>lua term:open(3)<cr>', {})
-
-vim.api.nvim_set_keymap('i', 'jk', '<esc>', {})
-vim.api.nvim_set_keymap('n', '<c-s>', '<cmd>w<cr>', {})
-vim.api.nvim_set_keymap('n', '<c-q>', '<cmd>q<cr>', {})
-vim.api.nvim_set_keymap('n', ',r', '<cmd>luafile lua/nvim-terminal/init.lua<cr>', {})
-
-local Terminal = require('nvim-terminal.terminal')
-local Window = require('nvim-terminal.window')
-
-local window = Window:new()
-term = Terminal:new(window)
-]]
-
+local config = require('nvim-terminal.config')
+local Util = require('nvim-terminal.util')
 local Terminal = require('nvim-terminal.terminal')
 local Window = require('nvim-terminal.window')
 local DefaultTerminal = Terminal:new(Window:new())
 
+local api = vim.api
+
+NTGlobal = {}
+
+local setup = function(opts)
+    config = Util.Lua.merge_tables(config, opts or {})
+
+    if config.terminals == nil then return end
+
+    local window = Window:new(config.window)
+    local terminal = Terminal:new(window)
+
+    NTGlobal['terminal'] = terminal
+    NTGlobal['window'] = window
+
+    local LUA_F = ':lua %s<CR>'
+    local TG_F = LUA_F:format('NTGlobal["terminal"]:toggle()')
+    local T_F = LUA_F:format('NTGlobal["terminal"]:open(%i)')
+    local HEIGHTC_F = LUA_F:format('NTGlobal["window"]:change_height(%i)')
+    local WIDTHC_F = LUA_F:format('NTGlobal["window"]:change_width(%i)')
+
+    if not config.disable_default_keymaps then
+        -- setting toggle keymap
+        api.nvim_set_keymap('n', config.toggle_keymap, TG_F, {silent = true})
+
+        -- setting window width keymap
+        api.nvim_set_keymap('n', config.increase_width_keymap,
+                            WIDTHC_F:format(config.window_width_change_amount),
+                            {silent = true})
+
+        -- setting window width keymap
+        api.nvim_set_keymap('n', config.decrease_width_keymap,
+                            WIDTHC_F:format(-config.window_width_change_amount),
+                            {silent = true})
+
+        -- setting window height keymap
+        api.nvim_set_keymap('n', config.increase_height_keymap,
+                            HEIGHTC_F:format(config.window_height_change_amount),
+                            {silent = true})
+
+        -- setting window height keymap
+        api.nvim_set_keymap('n', config.decrease_height_keymap,
+                            HEIGHTC_F:format(-config.window_height_change_amount),
+                            {silent = true})
+
+        for index, term_conf in ipairs(config.terminals) do
+            -- setting terminal keymap
+            api.nvim_set_keymap('n', term_conf.keymap, T_F:format(index),
+                                {silent = true})
+        end
+    end
+end
+
 return {
-	Terminal = Terminal,
-	Window = Window,
-	DefaultTerminal = DefaultTerminal
+    Terminal = Terminal,
+    Window = Window,
+    DefaultTerminal = DefaultTerminal,
+    setup = setup,
 }
