@@ -78,4 +78,18 @@ function Window:get_bufno()
     if self:is_valid() then return v.nvim_win_get_buf(self.winid) end
 end
 
+-- Increase window height
+function Window:inc_height(by)
+    local _, height = self:get_size()
+	self.height = height + by
+	self:update_size()
+end
+
+-- Decrease window height
+function Window:dec_height(by)
+    local _, height = self:get_size()
+	self.height = height - by
+	self:update_size()
+end
+
 return Window

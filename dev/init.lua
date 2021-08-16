@@ -1,5 +1,3 @@
-local Terminal = require('nvim-terminal').DefaultTerminal;
-
 -- plugin name will be used to reload the loaded modules
 local package_name = 'nvim-terminal'
 
@@ -19,7 +17,7 @@ end
 
 -- executes the run method in the package
 local run_action = function()
-    Terminal:toggle()
+    require('nvim-terminal').setup()
 end
 
 -- unload and run the function from the package
