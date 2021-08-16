@@ -2,7 +2,7 @@
 
 Terminal plugin to open/toggle the terminals in Neovim
 
-![nvim-terminal demo](https://raw.githubusercontent.com/s1n7ax/nvim-terminal/main/resources/gif/demo.gif)
+https://user-images.githubusercontent.com/18459807/129581388-f6d168e7-77d2-4dcc-81fa-7566334b6d88.mp4
 
 ## Features
 
