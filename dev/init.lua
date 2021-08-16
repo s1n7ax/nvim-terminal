@@ -18,6 +18,7 @@ end
 -- executes the run method in the package
 local run_action = function()
     require('nvim-terminal').setup()
+
 end
 
 -- unload and run the function from the package

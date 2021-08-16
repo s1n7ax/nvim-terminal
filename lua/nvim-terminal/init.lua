@@ -22,20 +22,32 @@ local setup = function(opts)
     local LUA_F = ':lua %s<CR>'
     local TG_F = LUA_F:format('NTGlobal["terminal"]:toggle()')
     local T_F = LUA_F:format('NTGlobal["terminal"]:open(%i)')
-    local INCW_F = LUA_F:format('NTGlobal["window"]:inc_height(%i)')
-    local DECW_F = LUA_F:format('NTGlobal["window"]:dec_height(%i)')
+    local HEIGHTC_F = LUA_F:format('NTGlobal["window"]:change_height(%i)')
+    local WIDTHC_F = LUA_F:format('NTGlobal["window"]:change_width(%i)')
 
     if not config.disable_default_keymaps then
         -- setting toggle keymap
         api.nvim_set_keymap('n', config.toggle_keymap, TG_F, {silent = true})
 
+        -- setting window width keymap
+        api.nvim_set_keymap('n', config.increase_width_keymap,
+                            WIDTHC_F:format(config.window_width_change_amount),
+                            {silent = true})
+
+        -- setting window width keymap
+        api.nvim_set_keymap('n', config.decrease_width_keymap,
+                            WIDTHC_F:format(-config.window_width_change_amount),
+                            {silent = true})
+
         -- setting window height keymap
         api.nvim_set_keymap('n', config.increase_height_keymap,
-                            INCW_F:format(2), {silent = true})
+                            HEIGHTC_F:format(config.window_height_change_amount),
+                            {silent = true})
 
         -- setting window height keymap
         api.nvim_set_keymap('n', config.decrease_height_keymap,
-                            DECW_F:format(2), {silent = true})
+                            HEIGHTC_F:format(-config.window_height_change_amount),
+                            {silent = true})
 
         for index, term_conf in ipairs(config.terminals) do
             -- setting terminal keymap
