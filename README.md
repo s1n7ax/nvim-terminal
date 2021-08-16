@@ -24,16 +24,21 @@ use {
 
 ## Default Keymaps
 
-<kbd>leader</kbd> + <kbd>;</kbd> - Toggle open/close terminal
+<kbd>leader</kbd> + <kbd>;</kbd> - **Toggle open/close terminal**
 
-<kbd>leader</kbd> + <kbd>1</kbd> - Open terminal 1
-<kbd>leader</kbd> + <kbd>2</kbd> - Open terminal 2
-<kbd>leader</kbd> + <kbd>3</kbd> - Open terminal 3
-<kbd>leader</kbd> + <kbd>4</kbd> - Open terminal 4
-<kbd>leader</kbd> + <kbd>5</kbd> - Open terminal 5
+<kbd>leader</kbd> + <kbd>1</kbd> - **Open terminal 1**
 
-<kbd>leader</kbd> + <kbd>+</kbd> - Increase window height
-<kbd>leader</kbd> + <kbd>-</kbd> - Decrease window height
+<kbd>leader</kbd> + <kbd>2</kbd> - **Open terminal 2**
+
+<kbd>leader</kbd> + <kbd>3</kbd> - **Open terminal 3**
+
+<kbd>leader</kbd> + <kbd>4</kbd> - **Open terminal 4**
+
+<kbd>leader</kbd> + <kbd>5</kbd> - **Open terminal 5**
+
+<kbd>leader</kbd> + <kbd>+</kbd> - **Increase window height**
+
+<kbd>leader</kbd> + <kbd>-</kbd> - **Decrease window height**
 
 ## Configuration
 
