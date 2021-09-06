@@ -3,6 +3,7 @@ local Util = require('nvim-terminal.util')
 local Terminal = require('nvim-terminal.terminal')
 local Window = require('nvim-terminal.window')
 local DefaultTerminal = Terminal:new(Window:new())
+local S = Util.String
 
 local api = vim.api
 
@@ -27,27 +28,41 @@ local setup = function(opts)
 
     if not config.disable_default_keymaps then
         -- setting toggle keymap
-        api.nvim_set_keymap('n', config.toggle_keymap, TG_F, {silent = true})
+        if S.is_not_empty(config.toggle_keymap) then
+            api.nvim_set_keymap('n', config.toggle_keymap, TG_F, {silent = true})
+        end
 
         -- setting window width keymap
-        api.nvim_set_keymap('n', config.increase_width_keymap,
-                            WIDTHC_F:format(config.window_width_change_amount),
-                            {silent = true})
+        if S.is_not_empty(config.increase_width_keymap) then
+            api.nvim_set_keymap('n', config.increase_width_keymap,
+                                WIDTHC_F:format(
+                                  config.window_width_change_amount),
+                                {silent = true})
+        end
 
         -- setting window width keymap
-        api.nvim_set_keymap('n', config.decrease_width_keymap,
-                            WIDTHC_F:format(-config.window_width_change_amount),
-                            {silent = true})
+        if S.is_not_empty(config.decrease_width_keymap) then
+            api.nvim_set_keymap('n', config.decrease_width_keymap,
+                                WIDTHC_F:format(
+                                  -config.window_width_change_amount),
+                                {silent = true})
+        end
 
         -- setting window height keymap
-        api.nvim_set_keymap('n', config.increase_height_keymap,
-                            HEIGHTC_F:format(config.window_height_change_amount),
-                            {silent = true})
+        if S.is_not_empty(config.increase_height_keymap) then
+            api.nvim_set_keymap('n', config.increase_height_keymap,
+                                HEIGHTC_F:format(
+                                  config.window_height_change_amount),
+                                {silent = true})
+        end
 
         -- setting window height keymap
-        api.nvim_set_keymap('n', config.decrease_height_keymap,
-                            HEIGHTC_F:format(-config.window_height_change_amount),
-                            {silent = true})
+        if S.is_not_empty(config.decrease_height_keymap) then
+            api.nvim_set_keymap('n', config.decrease_height_keymap,
+                                HEIGHTC_F:format(
+                                  -config.window_height_change_amount),
+                                {silent = true})
+        end
 
         for index, term_conf in ipairs(config.terminals) do
             -- setting terminal keymap
