@@ -46,10 +46,10 @@ use {
 
 ## Configuration
 
-Simply pass the custom configuration in to `setup` method
+Simply pass the custom configuration to `setup` method
 
 ```lua
--- following option will hide the buffer when it is closed instead deleting
+-- following option will hide the buffer when it is closed instead of deleting
 -- the buffer. This is important to reuse the last terminal buffer
 -- IF the option is not set, plugin will open a new terminal every single time
 vim.o.hidden = true
@@ -70,16 +70,16 @@ require('nvim-terminal').setup({
         height = 15,
     },
 
-    -- keymap to disablesb all the default keymaps
+    -- keymap to disable all the default keymaps
     disable_default_keymaps = false,
 
     -- keymap to toggle open and close terminal window
     toggle_keymap = '<leader>;',
 
-    -- increase the window width by when you hit the keymap
+    -- increase the window height by when you hit the keymap
     window_height_change_amount = 2,
 
-    -- increase the window height by when you hit the keymap
+    -- increase the window width by when you hit the keymap
     window_width_change_amount = 2,
 
     -- keymap to increase the window width
@@ -107,7 +107,7 @@ require('nvim-terminal').setup({
 
 ## Add Keymaps Manually
 
-`nvim-terminal` adds a globle variable called `NTGlobal`. When you call
+`nvim-terminal` adds a global variable called `NTGlobal`. When you call
 `require('nvim-terminal').setup()` it adds `terminal` and `window` properties to
 `NTGlobal`
 
